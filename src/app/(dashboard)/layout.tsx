@@ -1,4 +1,5 @@
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { DashboardNavbar } from "@/modules/dashboard/ui/components/dashboard-navbar";
 import DashboardSidebar from "@/modules/dashboard/ui/components/dashboard-sidebar";
 
 const Layout = ({
@@ -10,6 +11,7 @@ const Layout = ({
     <SidebarProvider>
       <DashboardSidebar />
       <main className="h-screen w-screen flex flex-col bg-muted">
+        <DashboardNavbar />
         {children}
       </main>
     </SidebarProvider>
