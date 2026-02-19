@@ -1,0 +1,60 @@
+import { useIsMobile } from "@/hooks/use-mobile";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHeader,
+  DrawerTitle,
+} from "./ui/drawer";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "./ui/dialog";
+
+interface Props {
+  title: string;
+  description: string;
+  children: React.ReactNode;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
+const ResponsiveDialog = ({
+  title,
+  description,
+  children,
+  open,
+  onOpenChange,
+}: Props) => {
+  const IsMobile = useIsMobile();
+
+  if (IsMobile) {
+    return (
+      <Drawer open={open} onOpenChange={onOpenChange}>
+        <DrawerContent>
+          <DrawerHeader>
+            <DrawerTitle>{title}</DrawerTitle>
+            <DrawerDescription>{description}</DrawerDescription>
+          </DrawerHeader>
+          <div className="p-4">{children}</div>
+        </DrawerContent>
+      </Drawer>
+    );
+  }
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>{title}</DialogTitle>
+          <DialogDescription>{description}</DialogDescription>
+        </DialogHeader>
+        <div className="p-4">{children}</div>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+export default ResponsiveDialog;
