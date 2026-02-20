@@ -1,6 +1,6 @@
 import { createTRPCRouter } from "../init";
 import { agentsRouter } from "@/modules/agents/server/procedures";
-export const appRouter = createTRPCRouter({
+export const AppRouter = createTRPCRouter({
   agents: agentsRouter,
 });
-export type AppRouter = typeof appRouter;
+export type AppRouter = typeof AppRouter;
