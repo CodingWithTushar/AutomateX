@@ -32,9 +32,11 @@ export const columns: ColumnDef<GetOneAgentType>[] = [
   {
     accessorKey: "meetingCount",
     header: "Meetings",
-    cell: () => (
+    cell: ({ row }) => (
       <Badge variant={"outline"} className="flex items-center gap-x-2 ">
-        <VideoIcon className="text-white" />2 meetings
+        <VideoIcon className="text-white" />
+        {row.original.meetingCount}{" "}
+        {row.original.meetingCount === 1 ? "meeting" : "meetings"}
       </Badge>
     ),
   },
