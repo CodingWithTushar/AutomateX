@@ -28,7 +28,7 @@ export const DashboardNavbar = () => {
         isOpen={commandopen}
         setOpen={setCommandopen}
       />
-      <nav className="flex px-4 gap-x-2 py-3 items-center h-10 border-b bg-background">
+      <nav className="flex px-4 gap-x-2 py-3 items-center h-15 border-b bg-background ">
         <Button className="size-9" variant={"outline"} onClick={toggleSidebar}>
           {state === "collapsed" || isMobile ? (
             <PanelLeftIcon />
