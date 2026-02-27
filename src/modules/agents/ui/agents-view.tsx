@@ -9,8 +9,10 @@ import { DataTable } from "../component/data-table";
 import EmptyState from "@/components/empty-state";
 import { useAgentFilter } from "../hook/use-agent-filter";
 import AgentDataPagination from "../component/agent-data-pagination";
+import { useRouter } from "next/navigation";
 
 export const AgentsView = () => {
+  const router = useRouter();
   const trpc = useTRPC();
   const [filters, setFilters] = useAgentFilter();
   const { data } = useSuspenseQuery(
@@ -21,8 +23,8 @@ export const AgentsView = () => {
 
   return (
     <div className="flex flex-col flex-1 px-4 pb-4 md:px-8">
-      <DataTable data={data.items} columns={columns} />
-      <AgentDataPagination
+      <DataTable data={data.items} columns={columns} onRowClick={(row) => router.push(`/agents/${row.id}`)} />
+      <AgentDataPagination 
         page={filters.page}
         totalPages={data.totalPages}
         onPageChange={(page) => setFilters({ page })}
@@ -37,20 +39,20 @@ export const AgentsView = () => {
   );
 };
 
-export const AgentsViewLoading = () => {
-  return (
-    <LoadingState
-      title="Loading Agents"
-      description="This may take a few seconds"
-    />
-  );
-};
+  export const AgentsViewLoading = () => {
+    return (
+      <LoadingState
+        title="Loading Agents"
+        description="This may take a few seconds"
+      />
+    );
+  };
 
-export const AgentsViewError = () => {
-  return (
-    <ErrorState
-      title="Error Loading Agents"
-      description="Something went wrong"
-    />
-  );
-};
+  export const AgentsViewError = () => {
+    return (
+      <ErrorState
+        title="Error Loading Agents"
+        description="Something went wrong"
+      />
+    );
+  };
