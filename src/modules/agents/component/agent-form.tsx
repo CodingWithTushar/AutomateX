@@ -5,6 +5,8 @@ import { useTRPC } from "@/trpc/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import z from "zod";
+import { toast } from "sonner";
+
 import { agentsInsertSchema } from "../schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -19,7 +21,6 @@ import { GenerateAvatar } from "@/components/GenerateAvatar";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
 
 interface Props {
   onSuccess?: () => void;
@@ -32,6 +33,22 @@ const AgentForm = ({ onSuccess, onCancel, initialValues }: Props) => {
   const queryClient = useQueryClient();
   const createAgent = useMutation(
     trpc.agents.create.mutationOptions({
+      onSuccess: async () => {
+        await queryClient.invalidateQueries(
+          trpc.agents.getMany.queryOptions({}),
+        );
+
+        onSuccess?.();
+      },
+      onError: (error) => {
+        console.log(error);
+        toast.error(error.message);
+      },
+    }),
+  );
+
+  const updateAgent = useMutation(
+    trpc.agents.update.mutationOptions({
       onSuccess: async () => {
         await queryClient.invalidateQueries(
           trpc.agents.getMany.queryOptions({}),
@@ -60,11 +77,11 @@ const AgentForm = ({ onSuccess, onCancel, initialValues }: Props) => {
   });
 
   const isEdit = !!initialValues?.id;
-  const isPending = createAgent.isPending;
+  const isPending = createAgent.isPending || updateAgent.isPending;
 
   const onSubmit = (values: z.infer<typeof agentsInsertSchema>) => {
     if (isEdit) {
-      console.log("Edited");
+      updateAgent.mutate({ ...values, id: initialValues.id });
     } else {
       createAgent.mutate(values);
     }
