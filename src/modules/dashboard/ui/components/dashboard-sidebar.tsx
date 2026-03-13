@@ -23,8 +23,8 @@ import { SidebarUser } from "./sidebar-user";
 const firstSession = [
   {
     icon: VideoIcon,
-    label: "Meeting",
-    href: "/meeting",
+    label: "Meetings",
+    href: "/meetings",
   },
   {
     icon: BotIcon,
