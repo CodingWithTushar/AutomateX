@@ -3,10 +3,10 @@
 import { Button } from "@/components/ui/button";
 import { PlusIcon, XCircleIcon } from "lucide-react";
 import { useState } from "react";
-import AgentListDialog from "./agent-list-dialog";
 import AgentSearchFilter from "./agent-search-filter";
 import { useAgentFilter } from "../hook/use-agent-filter";
 import { DEFAULT_PAGE } from "@/constants";
+import NewAgentDialog from "./new-agent-dialog";
 
 const AgentListHeader = () => {
   const [filter, setFilter] = useAgentFilter();
@@ -23,7 +23,7 @@ const AgentListHeader = () => {
 
   return (
     <>
-      <AgentListDialog
+      <NewAgentDialog
         open={isDialogOpen}
         onOpenChange={() => setIsDialogOpen(false)}
       />
