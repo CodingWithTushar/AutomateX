@@ -16,7 +16,6 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { BotIcon, TrendingUpIcon, VideoIcon } from "lucide-react";
-import { log } from "console";
 import { cn } from "@/lib/utils";
 import { SidebarUser } from "./sidebar-user";
 

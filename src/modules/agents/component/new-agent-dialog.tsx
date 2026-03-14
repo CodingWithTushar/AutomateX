@@ -8,15 +8,17 @@ interface Props {
   onOpenChange: (open: boolean) => void;
 }
 
-const AgentListDialog = ({ open, onOpenChange }: Props) => {
+const NewAgentDialog = ({ open, onOpenChange }: Props) => {
   return (
     <>
-      <CommandResponsiveDialog
-        title="New Agents"
-        description="Create new Ai agents"
-        open={open}
-        onOpenChange={onOpenChange}
-      >
+      <CommandResponsiveDialog open={open} onOpenChange={onOpenChange}>
+        <div className="flex flex-col px-4 pt-4 gap-1">
+          <h4>
+            {" "}
+            <b>New Agents</b>
+          </h4>
+          <h6>Create new Ai agents</h6>
+        </div>
         <AgentForm
           onSuccess={() => onOpenChange(false)}
           onCancel={() => onOpenChange(false)}
@@ -26,4 +28,4 @@ const AgentListDialog = ({ open, onOpenChange }: Props) => {
   );
 };
 
-export default AgentListDialog;
+export default NewAgentDialog;
