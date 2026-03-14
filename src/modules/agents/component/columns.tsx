@@ -1,12 +1,12 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { GetOneAgentType } from "../types";
 import { GenerateAvatar } from "@/components/GenerateAvatar";
 import { MoveRightIcon, VideoIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { GetManyAgentType } from "../types";
 
-export const columns: ColumnDef<GetOneAgentType>[] = [
+export const columns: ColumnDef<GetManyAgentType[number]>[] = [
   {
     accessorKey: "name",
     header: "Agents Name",
@@ -18,8 +18,8 @@ export const columns: ColumnDef<GetOneAgentType>[] = [
             seed={row.original.name}
             className="size-6"
           />
-        </div>
         <span className="font-semibold capitalize">{row.original.name}</span>
+        </div>
         <div className="flex items-center gap-x-2">
           <MoveRightIcon className="size-3" />
           <span className="text-sm text-muted-foreground max-w-50 truncate capitalize">
