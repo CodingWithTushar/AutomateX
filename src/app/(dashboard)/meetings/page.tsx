@@ -5,14 +5,21 @@ import { ErrorBoundary } from "react-error-boundary";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { SearchParams } from "nuqs";
 
 import MeetingView, {
   MeetingsViewError,
   MeetingsViewLoading,
 } from "@/modules/meetings/ui/views/meeting-view";
 import MeetingListHeader from "@/modules/meetings/ui/components/meeting-list-header";
+import { loadSearchParams } from "@/modules/meetings/params";
 
-const MeetingPage = async () => {
+interface Props {
+  searchParams: Promise<SearchParams>;
+}
+
+const MeetingPage = async ({ searchParams }: Props) => {
+  const filters = await loadSearchParams(searchParams);
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -22,7 +29,12 @@ const MeetingPage = async () => {
   }
 
   const queryClient = getQueryClient();
-  void queryClient.prefetchQuery(trpc.meetings.getMany.queryOptions({}));
+  void queryClient.prefetchQuery(
+    trpc.meetings.getMany.queryOptions({
+      ...filters,
+    }),
+  );
+
   return (
     <>
       <MeetingListHeader />
