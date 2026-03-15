@@ -12,6 +12,7 @@ import {
 } from "@/constants";
 import { TRPCError } from "@trpc/server";
 import { MeetingInsertSchema, MeetingUpdateSchema } from "../schema";
+import { MeetingStatus } from "../types";
 
 export const meetingRouter = createTRPCRouter({
   getOne: protectedProcedure
@@ -46,23 +47,37 @@ export const meetingRouter = createTRPCRouter({
           .max(MAX_PAGE_SIZE)
           .default(DEFAULT_PAGE_SIZE),
         search: z.string().nullish(),
+        agentId: z.string().nullish(),
+        status: z
+          .enum([
+            MeetingStatus.Upcoming,
+            MeetingStatus.Active,
+            MeetingStatus.Completed,
+            MeetingStatus.Processing,
+            MeetingStatus.Cancelled,
+          ])
+          .nullish(),
       }),
     )
     .query(async ({ ctx, input }) => {
-      const { page, pageSize, search } = input;
+      const { page, pageSize, search, status, agentId } = input;
 
       const data = await db
         .select({
           ...getTableColumns(meetings),
           agent: agents,
-          duration: sql<number>`EXTRACT(EPOCH FROM (ended_at - started_at))`.as("duration")
+          duration: sql<number>`EXTRACT(EPOCH FROM (ended_at - started_at))`.as(
+            "duration",
+          ),
         })
         .from(meetings)
-        .innerJoin(agents,eq(meetings.agentId, agents.id))
+        .innerJoin(agents, eq(meetings.agentId, agents.id))
         .where(
           and(
             eq(meetings.userId, ctx.auth.user.id),
             search ? ilike(meetings.name, `%${search}%`) : undefined,
+            status ? eq(meetings.status, status) : undefined,
+            agentId ? eq(meetings.agentId, agentId) : undefined,
           ),
         )
         .orderBy(desc(meetings.createdAt), desc(meetings.id))
@@ -72,7 +87,7 @@ export const meetingRouter = createTRPCRouter({
       const [total] = await db
         .select({ count: count() })
         .from(meetings)
-        .innerJoin(agents,eq(meetings.agentId, agents.id))
+        .innerJoin(agents, eq(meetings.agentId, agents.id))
         .where(
           and(
             eq(meetings.userId, ctx.auth.user.id),
